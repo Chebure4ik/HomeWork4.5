@@ -63,10 +63,12 @@ public class GameView extends SurfaceView implements Runnable{
             background2.setX(screenX); // то обновление x до размера ширины фона
         }
 
-        if (flight.isGoingUp()) { // условие подъёма
+        if (flight.isGoingUp() == 1) { // условие подъёма
             flight.setY(flight.getY() - (int)(30 * screenRatioY));
-        } else { // условие снижения
+        } else if (flight.isGoingUp() == 2) { // условие снижения
             flight.setY(flight.getY() + (int)(30 * screenRatioY));
+        } else if (flight.isGoingUp() == 0) {
+            flight.setY(flight.getY());
         }
         // задание скорости подъёма и снижения самолёта
 
@@ -142,9 +144,9 @@ public class GameView extends SurfaceView implements Runnable{
                 // если пользователь нажал на левую сторону экрана
                 if (event.getX() < (screenX / 2) && event.getY() < (screenY / 2)) {
                     // то движение самолёта вверх
-                    flight.setGoingUp(true);
+                    flight.setGoingUp(1);
                 } else if (event.getX() < (screenX / 2) && event.getY() > (screenY / 2)){
-                    flight.setGoingUp(false);
+                    flight.setGoingUp(2);
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // движение по экрану
@@ -152,9 +154,15 @@ public class GameView extends SurfaceView implements Runnable{
                 break;
             case MotionEvent.ACTION_UP: // отпускание
                 if(flight.getY() < (screenY / 2)){
-                    flight.setGoingUp(false);
+                    while(flight.getY() < (screenY / 2)){
+                        flight.setGoingUp(2);
+                    }
+                    flight.setGoingUp(0);
                 } else if (flight.getY() > (screenY / 2)) {
-                    flight.setGoingUp(true);
+                    while(flight.getY() > (screenY / 2)) {
+                        flight.setGoingUp(1);
+                    }
+                    flight.setGoingUp(0);
                 }
                 break;
         }
